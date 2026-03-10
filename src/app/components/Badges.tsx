@@ -201,7 +201,8 @@ export const Badges: React.FC = () => {
 
         {/* ── Localhost notice ── */}
         <p className={`text-center text-xs mt-10 ${isDark ? "text-gray-600" : "text-gray-400"}`}>
-          LinkedIn badge renders on the deployed site (GitHub Pages). It may appear blank on localhost due to LinkedIn's domain policy.
+          Follow my github and linkedin , my tryhackme account is under maintenance
+          {/* renders on the deployed site (GitHub Pages). It may appear blank on localhost due to LinkedIn's domain policy. */}
         </p>
       </div>
     </section>
