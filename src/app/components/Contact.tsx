@@ -6,19 +6,13 @@ import {
   Mail, Github, MapPin, Send, CheckCircle,
   MessageSquare, User, AtSign, Linkedin,
 } from "lucide-react";
-import emailjs from "@emailjs/browser";
 import { useTheme } from "./ThemeContext";
 
-// ─── EmailJS Configuration ────────────────────────────────────────────────
-// 1. Sign up free at https://www.emailjs.com/
-// 2. Add Email Service → connect your Gmail (deysouvik023@gmail.com)
-// 3. Create Email Template with variables: {{from_name}}, {{from_email}}, {{message}}
-// 4. Fill in the three values below from your EmailJS dashboard:
-const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";    // e.g. "service_abc123"
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";   // e.g. "template_xyz456"
-const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";     // Account > API Keys
-
-const OWNER_EMAIL = "deysouvik023@gmail.com";
+// ─── Formspree endpoint (from ContactMe.jsx) ──────────────────────────────
+// This sends form submissions directly to deysouvik023@gmail.com via Formspree.
+// No credentials needed — just make sure the Formspree form is activated by
+// visiting https://formspree.io/f/mjkbvkwb and confirming your email there.
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mjkbvkwb";
 
 export const Contact: React.FC = () => {
   const { theme } = useTheme();
@@ -42,23 +36,32 @@ export const Contact: React.FC = () => {
     setLoading(true);
 
     try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name:  form.name,
-          from_email: form.email,
-          message:    form.message,
-          to_email:   OWNER_EMAIL,
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        EMAILJS_PUBLIC_KEY
-      );
-      setSent(true);
-      setForm({ name: "", email: "", message: "" });
-      setTimeout(() => setSent(false), 6000);
-    } catch (err) {
-      setError("Failed to send message. Please try again or email me directly.");
-      console.error("EmailJS error:", err);
+        body: JSON.stringify({
+          username: form.name,
+          Email: form.email,
+          message: form.message,
+        }),
+      });
+
+      if (response.ok) {
+        setSent(true);
+        setForm({ name: "", email: "", message: "" });
+        setTimeout(() => setSent(false), 6000);
+      } else {
+        const data = await response.json();
+        setError(
+          data?.errors?.[0]?.message ||
+            "Failed to send. Please try again or email me directly."
+        );
+      }
+    } catch {
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -69,8 +72,8 @@ export const Contact: React.FC = () => {
     {
       icon: Mail,
       label: "Email",
-      value: OWNER_EMAIL,
-      href: `mailto:${OWNER_EMAIL}`,
+      value: "deysouvik023@gmail.com",
+      href: "mailto:deysouvik023@gmail.com",
       color: "from-purple-500 to-violet-600",
     },
     {
@@ -428,7 +431,6 @@ export const Contact: React.FC = () => {
                     }`}
                   >
                     Your message will be delivered directly to Souvik's inbox.
-                    message pre-filled.
                   </p>
                 </form>
               )}

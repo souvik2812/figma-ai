@@ -8,6 +8,7 @@ const navLinks = [
   { label: "About", href: "about" },
   { label: "Skills", href: "skills" },
   { label: "Projects", href: "projects" },
+  { label: "GitHub", href: "github" },
   { label: "Contact", href: "contact" },
 ];
 
@@ -20,7 +21,7 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
-      const sections = ["home", "about", "skills", "projects", "contact"];
+      const sections = ["home", "about", "skills", "projects", "github", "contact"];
       // Use spread to avoid mutating the original array with .reverse()
       const reversed = [...sections].reverse();
       for (const section of reversed) {

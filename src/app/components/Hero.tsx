@@ -253,8 +253,8 @@ export const Hero: React.FC = () => {
                   isDark ? "bg-[#0a0a0f]" : "bg-white"
                 }`}>
                   <img
-                    src="https://avatars.githubusercontent.com/u/souvik2812?v=4"
-                    alt="Souvik"
+                    src="/PHOTO1_SQUARE.jpg"
+                    alt="Souvik Dey"
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.currentTarget;
